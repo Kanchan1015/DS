@@ -1,0 +1,7 @@
+com/logsystem/LogSystemApplication.class
+com/logsystem/service/LogService.class
+com/logsystem/controller/LogController.class
+com/logsystem/model/LogEntry.class
+com/logsystem/repository/LogEntryRepository.class
+com/logsystem/controller/TestDataController.class
+com/logsystem/model/LogLevel.class
