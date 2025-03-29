@@ -6,8 +6,8 @@ import com.logsystem.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,8 +34,20 @@ public class TestDataController {
         return ResponseEntity.ok(logService.createLog(message, level));
     }
 
+    // Updated method with filtering, sorting, and pagination
     @GetMapping("/data")
-    public ResponseEntity<List<LogEntry>> getTestData() {
-        return ResponseEntity.ok(logService.getAllLogs());
+    public ResponseEntity<Page<LogEntry>> getTestData(
+        @RequestParam(required = false) String level, 
+        @RequestParam(required = false) String keyword,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "timestamp") String sortBy,
+        @RequestParam(defaultValue = "desc") String order
+    ) {
+        LogLevel logLevel = level != null ? LogLevel.valueOf(level.toUpperCase()) : null;
+        Sort.Direction sortDirection = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
+
+        return ResponseEntity.ok(logService.getFilteredLogs(logLevel, keyword, pageable));
     }
-} 
+}
