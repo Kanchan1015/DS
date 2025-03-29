@@ -2,24 +2,24 @@ package com.logsystem.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Document(collection = "logs")
 public class LogEntry {
     @Id
     private String id;
     private String message;
-    private LocalDateTime timestamp;
+    private Instant timestamp;  // Changed to Instant
     private LogLevel level;
 
     public LogEntry() {
-        this.timestamp = LocalDateTime.now();
-        this.level = LogLevel.INFO; // Default level
+        this.timestamp = Instant.now();  // Set timestamp to UTC using Instant
+        this.level = LogLevel.INFO;  // Default level
     }
 
     public LogEntry(String message, LogLevel level) {
         this.message = message;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = Instant.now();  // Set timestamp to UTC using Instant
         this.level = level;
     }
 
@@ -40,11 +40,11 @@ public class LogEntry {
         this.message = message;
     }
 
-    public LocalDateTime getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -55,4 +55,4 @@ public class LogEntry {
     public void setLevel(LogLevel level) {
         this.level = level;
     }
-} 
+}
