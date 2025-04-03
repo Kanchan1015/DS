@@ -3,23 +3,27 @@ package com.logsystem.service;
 import com.logsystem.model.LogEntry;
 import com.logsystem.model.LogLevel;
 import com.logsystem.repository.LogEntryRepository;
+import com.logsystem.service.LeaderElectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class LogService {
     private final LogEntryRepository logEntryRepository;
+    private final LeaderElectionService leaderElectionService;
 
     @Autowired
-    public LogService(LogEntryRepository logEntryRepository) {
+    public LogService(LogEntryRepository logEntryRepository, LeaderElectionService leaderElectionService) {
         this.logEntryRepository = logEntryRepository;
+        this.leaderElectionService = leaderElectionService;
     }
 
     public LogEntry createLog(String message, LogLevel level) {
-        LogEntry logEntry = new LogEntry(message, level);
+        if (!leaderElectionService.isLeader()) {
+            throw new IllegalStateException("Only the leader can write logs.");
+        }
+        LogEntry logEntry = new LogEntry(0,message, level);
         return logEntryRepository.save(logEntry);
     }
 
@@ -44,4 +48,3 @@ public class LogService {
         }
         return logEntryRepository.findAll(pageable);
     }
-}

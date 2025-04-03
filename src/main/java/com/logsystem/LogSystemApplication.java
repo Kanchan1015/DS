@@ -8,4 +8,4 @@ public class LogSystemApplication {
     public static void main(String[] args) {
         SpringApplication.run(LogSystemApplication.class, args);
     }
-} 
+}

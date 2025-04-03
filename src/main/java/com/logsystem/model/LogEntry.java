@@ -6,24 +6,37 @@ import java.time.Instant;
 
 @Document(collection = "logs")
 public class LogEntry {
+
     @Id
     private String id;
+    private int index; // Added for Raft log tracking
     private String message;
-    private Instant timestamp;  // Changed to Instant
+    private Instant timestamp;
     private LogLevel level;
 
+    // Default constructor for MongoDB
     public LogEntry() {
-        this.timestamp = Instant.now();  // Set timestamp to UTC using Instant
-        this.level = LogLevel.INFO;  // Default level
+        this.timestamp = Instant.now();
+        this.level = LogLevel.INFO; // Default level as INFO
     }
 
-    public LogEntry(String message, LogLevel level) {
+    // Constructor with parameters
+    public LogEntry(int index, String message, LogLevel level) {
+        this.index = index;
         this.message = message;
-        this.timestamp = Instant.now();  // Set timestamp to UTC using Instant
+        this.timestamp = Instant.now(); // Capture current timestamp
         this.level = level;
     }
 
     // Getters and Setters
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
     public String getId() {
         return id;
     }
@@ -44,15 +57,3 @@ public class LogEntry {
         return timestamp;
     }
 
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public LogLevel getLevel() {
-        return level;
-    }
-
-    public void setLevel(LogLevel level) {
-        this.level = level;
-    }
-}

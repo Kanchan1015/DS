@@ -1,8 +1,13 @@
+/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/service/LeaderElectionService.java
+/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/model/ClusterNode.java
+/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/controller/LeaderController.java
+/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/service/LogService.java
+/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/controller/TestDataController.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/controller/LogController.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/model/LogEntry.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/repository/LogEntryRepository.java
+/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/service/LogReplicationService.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/tempCodeRunnerFile.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/LogSystemApplication.java
-/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/service/LogService.java
+/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/service/NodeRegistryService.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/model/LogLevel.java
-/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/controller/TestDataController.java
