@@ -57,3 +57,26 @@ public class LogEntry {
         return timestamp;
     }
 
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public LogLevel getLevel() {
+        return level;
+    }
+
+    public void setLevel(LogLevel level) {
+        this.level = level;
+    }
+
+    @Override
+    public String toString() {
+        return "LogEntry{" +
+                "id='" + id + '\'' +
+                ", index=" + index +
+                ", message='" + message + '\'' +
+                ", timestamp=" + timestamp +
+                ", level=" + level +
+                '}';
+    }
+}

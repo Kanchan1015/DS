@@ -48,3 +48,4 @@ public class LogService {
         }
         return logEntryRepository.findAll(pageable);
     }
+}
