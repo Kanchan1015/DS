@@ -30,4 +30,12 @@ public class NodeRegistryService {
             node.setLeader(node.getNodeId().equals(nodeId));
         }
     }
+
+    // NEW METHOD: Get a node by its ID
+    public ClusterNode getNodeById(String nodeId) {
+        return clusterNodes.stream()
+                .filter(node -> node.getNodeId().equals(nodeId))
+                .findFirst()
+                .orElse(null);
+    }
 }

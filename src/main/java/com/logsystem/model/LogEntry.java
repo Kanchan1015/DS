@@ -1,6 +1,7 @@
 package com.logsystem.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.Instant;
 
@@ -10,6 +11,7 @@ public class LogEntry {
     @Id
     private String id;
     private int index; // Added for Raft log tracking
+    @Indexed(unique = true) // Ensures uniqueness for message field
     private String message;
     private Instant timestamp;
     private LogLevel level;

@@ -6,6 +6,7 @@
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/controller/LogController.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/model/LogEntry.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/repository/LogEntryRepository.java
+/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/service/TimeSyncService.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/service/LogReplicationService.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/tempCodeRunnerFile.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/LogSystemApplication.java

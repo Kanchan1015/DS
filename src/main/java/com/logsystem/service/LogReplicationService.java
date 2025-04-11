@@ -6,6 +6,8 @@ import com.logsystem.repository.LogEntryRepository;  // Import Correct Repositor
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LogReplicationService {
     
@@ -24,5 +26,12 @@ public class LogReplicationService {
 
     public void replicateLog(LogEntry logEntry) {
         logEntryRepository.save(logEntry); // Save log entry
+    }
+
+    // NEW METHOD: Fetch missing logs for rejoining node
+    public List<String> getMissingLogs(String rejoiningNodeId) {
+        // Implement logic to get logs that the rejoining node is missing
+        // For now, return a placeholder list of logs
+        return List.of("Log1", "Log2", "Log3");
     }
 }

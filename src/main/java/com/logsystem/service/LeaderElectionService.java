@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Random;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
@@ -78,6 +79,22 @@ public class LeaderElectionService implements ApplicationListener<ContextRefresh
                     System.out.println("Failed to replicate log to: " + node.getNodeId());
                 }
             }
+        }
+    }
+
+    // NEW METHOD: Handle Log Recovery for Rejoining Nodes
+    public void handleLogRecovery(String rejoiningNodeId) {
+        if (isLeader.get()) {
+            List<String> missingLogs = logReplicationService.getMissingLogs(rejoiningNodeId);
+            // Send missing logs to the rejoining node
+            String followerUrl = "http://" + nodeRegistryService.getNodeById(rejoiningNodeId).getHost()
+                                 + ":" + nodeRegistryService.getNodeById(rejoiningNodeId).getPort() + "/api/logs/recovery";
+            for (String log : missingLogs) {
+                restTemplate.postForObject(followerUrl, log, String.class);
+            }
+            System.out.println("Sent missing logs to " + rejoiningNodeId);
+        } else {
+            System.out.println("Cannot recover logs, as " + nodeId + " is not the leader.");
         }
     }
 

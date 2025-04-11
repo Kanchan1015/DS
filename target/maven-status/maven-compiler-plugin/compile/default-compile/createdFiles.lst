@@ -1,6 +1,0 @@
-com/logsystem/service/LeaderElectionService.class
-com/logsystem/model/LogEntry.class
-com/logsystem/repository/LogEntryRepository.class
-com/logsystem/model/LogLevel.class
-com/logsystem/model/ClusterNode.class
-com/logsystem/service/NodeRegistryService.class

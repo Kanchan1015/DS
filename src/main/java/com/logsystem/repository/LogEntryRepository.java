@@ -9,6 +9,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LogEntryRepository extends MongoRepository<LogEntry, String> {
+
+    // Custom query method to check for duplicate logs based on message and level
+    boolean existsByMessageAndLevel(String message, LogLevel level);
+
+    // Additional methods for fetching logs
     Page<LogEntry> findByLevel(LogLevel level, Pageable pageable);
     Page<LogEntry> findByMessageContainingIgnoreCase(String keyword, Pageable pageable);
     Page<LogEntry> findByLevelAndMessageContainingIgnoreCase(LogLevel level, String keyword, Pageable pageable);

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,7 +31,7 @@ public class LogController {
         try {
             String message = request.get("message");
             String levelStr = request.get("level");
-            
+
             if (message == null || message.trim().isEmpty()) {
                 return ResponseEntity.badRequest().body("Message cannot be empty");
             }
@@ -40,6 +41,10 @@ public class LogController {
                 level = levelStr != null ? LogLevel.valueOf(levelStr.toUpperCase()) : LogLevel.INFO;
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.badRequest().body("Invalid log level. Valid levels are: INFO, WARNING, ERROR, DEBUG");
+            }
+
+            if (logService.existsByMessageAndLevel(message, level)) {
+                return ResponseEntity.badRequest().body("Log with the same message and level already exists.");
             }
 
             LogEntry logEntry = logService.createLog(message, level);
@@ -72,6 +77,30 @@ public class LogController {
             return ResponseEntity.badRequest().body("Invalid log level. Valid levels are: INFO, WARNING, ERROR, DEBUG");
         } catch (Exception e) {
             logger.error("Error retrieving logs by level", e);
+            return ResponseEntity.internalServerError().body("Error retrieving logs: " + e.getMessage());
+        }
+    }
+
+    // ✅ ADDED: Simulate Out-of-Order Logs
+    @PostMapping("/simulate")
+    public ResponseEntity<?> simulateLogs() {
+        try {
+            List<LogEntry> simulated = logService.simulateOutOfOrderLogs();
+            return ResponseEntity.ok(simulated);
+        } catch (Exception e) {
+            logger.error("Error simulating logs", e);
+            return ResponseEntity.internalServerError().body("Error simulating logs: " + e.getMessage());
+        }
+    }
+
+    // ✅ ADDED: Get Logs Sorted by Timestamp
+    @GetMapping("/sorted")
+    public ResponseEntity<?> getSortedLogs() {
+        try {
+            List<LogEntry> logs = logService.getSortedLogs();
+            return ResponseEntity.ok(logs);
+        } catch (Exception e) {
+            logger.error("Error retrieving sorted logs", e);
             return ResponseEntity.internalServerError().body("Error retrieving logs: " + e.getMessage());
         }
     }
