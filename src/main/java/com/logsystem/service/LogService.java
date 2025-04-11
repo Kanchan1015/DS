@@ -64,41 +64,4 @@ public class LogService {
     // Filtering logs by level and message keyword with pagination
     public Page<LogEntry> getFilteredLogs(LogLevel level, String keyword, Pageable pageable) {
         if (level != null && keyword != null) {
-            return logEntryRepository.findByLevelAndMessageContainingIgnoreCase(level, keyword, pageable);
-        } else if (level != null) {
-            return logEntryRepository.findByLevel(level, pageable);
-        } else if (keyword != null) {
-            return logEntryRepository.findByMessageContainingIgnoreCase(keyword, pageable);
-        }
-        return logEntryRepository.findAll(pageable);
-    }
-
-    // 🔽 New method: Get logs sorted by timestamp (ASC)
-    public List<LogEntry> getLogsSortedByTimestamp() {
-        return logEntryRepository.findAll(Sort.by(Sort.Direction.ASC, "timestamp"));
-    }
-
-    // 🔽 New method: Simulate out-of-order logs (for testing purposes)
-    public List<LogEntry> simulateOutOfOrderLogs() {
-        List<LogEntry> logs = new ArrayList<>();
-
-        LogEntry oldLog = new LogEntry(0, "Old log", LogLevel.INFO);
-        oldLog.setTimestamp(Instant.now().minusSeconds(300)); // 5 mins ago
-        logs.add(logEntryRepository.save(oldLog));
-
-        LogEntry nowLog = new LogEntry(0, "Current log", LogLevel.INFO);
-        nowLog.setTimestamp(Instant.now());
-        logs.add(logEntryRepository.save(nowLog));
-
-        LogEntry futureLog = new LogEntry(0, "Future log", LogLevel.INFO);
-        futureLog.setTimestamp(Instant.now().plusSeconds(120)); // 2 mins ahead
-        logs.add(logEntryRepository.save(futureLog));
-
-        return logs;
-    }
-
-    // 🔽 Method alias for test controller
-    public List<LogEntry> getSortedLogs() {
-        return getLogsSortedByTimestamp();
-    }
-}
+            return logEntryRepository.findByLevelAndM

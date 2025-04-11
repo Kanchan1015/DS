@@ -81,7 +81,7 @@ public class LogController {
         }
     }
 
-    // ✅ ADDED: Simulate Out-of-Order Logs
+   
     @PostMapping("/simulate")
     public ResponseEntity<?> simulateLogs() {
         try {
@@ -93,7 +93,7 @@ public class LogController {
         }
     }
 
-    // ✅ ADDED: Get Logs Sorted by Timestamp
+    
     @GetMapping("/sorted")
     public ResponseEntity<?> getSortedLogs() {
         try {
