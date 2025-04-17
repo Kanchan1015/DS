@@ -3,6 +3,10 @@ package com.logsystem.controller;
 import com.logsystem.model.LogEntry;
 import com.logsystem.model.LogLevel;
 import com.logsystem.service.LogService;
+
+
+import com.logsystem.service.CounterService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -102,6 +106,23 @@ public class LogController {
         } catch (Exception e) {
             logger.error("Error retrieving sorted logs", e);
             return ResponseEntity.internalServerError().body("Error retrieving logs: " + e.getMessage());
+        }
+    }
+
+        @RequestMapping("/counter")
+    public class CounterController {
+
+        private final CounterService counterService;
+
+        @Autowired
+        public CounterController(CounterService counterService) {
+            this.counterService = counterService;
+        }
+
+        @GetMapping("/next")
+        public ResponseEntity<Integer> getNextSequence(@RequestParam String counterName) {
+            int nextSequence = counterService.getNextSequence(counterName);
+            return ResponseEntity.ok(nextSequence);
         }
     }
 }

@@ -1,6 +1,9 @@
+/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/model/Counter.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/service/LeaderElectionService.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/model/ClusterNode.java
+/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/service/CounterService.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/controller/LeaderController.java
+/Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/repository/CounterRepository.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/service/LogService.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/controller/TestDataController.java
 /Users/kanchan/Desktop/ Y2S2/DS project/DS/src/main/java/com/logsystem/controller/LogController.java

@@ -17,22 +17,25 @@ public class LogService {
     private final LogEntryRepository logEntryRepository;
     private final LeaderElectionService leaderElectionService;
     private final TimeSyncService timeSyncService;
+    private final CounterService counterService; // NEW
 
     @Autowired
     public LogService(LogEntryRepository logEntryRepository,
                       LeaderElectionService leaderElectionService,
-                      TimeSyncService timeSyncService) {
+                      TimeSyncService timeSyncService,
+                      CounterService counterService) { // Injected CounterService
         this.logEntryRepository = logEntryRepository;
         this.leaderElectionService = leaderElectionService;
         this.timeSyncService = timeSyncService;
+        this.counterService = counterService;
     }
 
-    // Method to check for log duplication based on message and level
+    // Deduplication check
     public boolean existsByMessageAndLevel(String message, LogLevel level) {
         return logEntryRepository.existsByMessageAndLevel(message, level);
     }
 
-    // Create log method with deduplication check and timestamp correction
+    // 🔄 Updated to assign a unique, increasing index to each log
     public LogEntry createLog(String message, LogLevel level) {
         if (!leaderElectionService.isLeader()) {
             throw new IllegalStateException("Only the leader can write logs.");
@@ -42,26 +45,24 @@ public class LogService {
             throw new IllegalArgumentException("Log with the same message and level already exists.");
         }
 
-        LogEntry logEntry = new LogEntry(0, message, level);
+        int nextIndex = counterService.getNextSequence("logIndex"); // Get the next available index
+        LogEntry logEntry = new LogEntry(nextIndex, message, level);
 
-        // Normalize timestamp
         Instant normalizedTimestamp = timeSyncService.getSynchronizedTimestamp();
         logEntry.setTimestamp(normalizedTimestamp);
 
         return logEntryRepository.save(logEntry);
     }
 
-    // Fetch all logs with pagination
+    // Basic log queries
     public Page<LogEntry> getAllLogs(Pageable pageable) {
         return logEntryRepository.findAll(pageable);
     }
 
-    // Fetch logs by level with pagination
     public Page<LogEntry> getLogsByLevel(LogLevel level, Pageable pageable) {
         return logEntryRepository.findByLevel(level, pageable);
     }
 
-    // Filtering logs by level and message keyword with pagination
     public Page<LogEntry> getFilteredLogs(LogLevel level, String keyword, Pageable pageable) {
         if (level != null && keyword != null) {
             return logEntryRepository.findByLevelAndMessageContainingIgnoreCase(level, keyword, pageable);
@@ -73,17 +74,15 @@ public class LogService {
         return logEntryRepository.findAll(pageable);
     }
 
-    // 🔽 New method: Get logs sorted by timestamp (ASC)
     public List<LogEntry> getLogsSortedByTimestamp() {
         return logEntryRepository.findAll(Sort.by(Sort.Direction.ASC, "timestamp"));
     }
 
-    // 🔽 New method: Simulate out-of-order logs (for testing purposes)
     public List<LogEntry> simulateOutOfOrderLogs() {
         List<LogEntry> logs = new ArrayList<>();
 
         LogEntry oldLog = new LogEntry(0, "Old log", LogLevel.INFO);
-        oldLog.setTimestamp(Instant.now().minusSeconds(300)); // 5 mins ago
+        oldLog.setTimestamp(Instant.now().minusSeconds(300));
         logs.add(logEntryRepository.save(oldLog));
 
         LogEntry nowLog = new LogEntry(0, "Current log", LogLevel.INFO);
@@ -91,14 +90,27 @@ public class LogService {
         logs.add(logEntryRepository.save(nowLog));
 
         LogEntry futureLog = new LogEntry(0, "Future log", LogLevel.INFO);
-        futureLog.setTimestamp(Instant.now().plusSeconds(120)); // 2 mins ahead
+        futureLog.setTimestamp(Instant.now().plusSeconds(120));
         logs.add(logEntryRepository.save(futureLog));
 
         return logs;
     }
 
-    // 🔽 Method alias for test controller
     public List<LogEntry> getSortedLogs() {
         return getLogsSortedByTimestamp();
+    }
+
+    // 🔄 Log Recovery: Return logs that the rejoining node missed
+    public List<LogEntry> recoverLogsForRejoiningNode(int lastAppliedIndex) {
+        List<LogEntry> allLogs = logEntryRepository.findAll(Sort.by(Sort.Direction.ASC, "index"));
+        List<LogEntry> missingLogs = new ArrayList<>();
+
+        for (LogEntry log : allLogs) {
+            if (log.getIndex() > lastAppliedIndex) {
+                missingLogs.add(log);
+            }
+        }
+
+        return missingLogs;
     }
 }
