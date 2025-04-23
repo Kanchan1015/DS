@@ -3,39 +3,43 @@ package com.logsystem.service;
 import com.logsystem.model.LogEntry;
 import com.logsystem.model.LogLevel;
 import com.logsystem.repository.LogEntryRepository;
+
+import com.logsystem.service.CounterService;
+import com.logsystem.service.LeaderElectionService;
+import com.logsystem.service.TimeSyncService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class LogService {
+
     private final LogEntryRepository logEntryRepository;
     private final LeaderElectionService leaderElectionService;
     private final TimeSyncService timeSyncService;
-    private final CounterService counterService; // NEW
+    private final CounterService counterService;
 
     @Autowired
     public LogService(LogEntryRepository logEntryRepository,
                       LeaderElectionService leaderElectionService,
                       TimeSyncService timeSyncService,
-                      CounterService counterService) { // Injected CounterService
+                      CounterService counterService) {
         this.logEntryRepository = logEntryRepository;
         this.leaderElectionService = leaderElectionService;
         this.timeSyncService = timeSyncService;
         this.counterService = counterService;
     }
 
-    // Deduplication check
     public boolean existsByMessageAndLevel(String message, LogLevel level) {
         return logEntryRepository.existsByMessageAndLevel(message, level);
     }
 
-    // 🔄 Updated to assign a unique, increasing index to each log
     public LogEntry createLog(String message, LogLevel level) {
         if (!leaderElectionService.isLeader()) {
             throw new IllegalStateException("Only the leader can write logs.");
@@ -45,16 +49,36 @@ public class LogService {
             throw new IllegalArgumentException("Log with the same message and level already exists.");
         }
 
-        int nextIndex = counterService.getNextSequence("logIndex"); // Get the next available index
+        int nextIndex = counterService.getNextSequence("logIndex");
         LogEntry logEntry = new LogEntry(nextIndex, message, level);
-
         Instant normalizedTimestamp = timeSyncService.getSynchronizedTimestamp();
         logEntry.setTimestamp(normalizedTimestamp);
 
-        return logEntryRepository.save(logEntry);
+        int maxRetries = 3;
+        int attempt = 0;
+        long retryDelayMs = 100;
+
+        while (attempt < maxRetries) {
+            try {
+                return logEntryRepository.save(logEntry);
+            } catch (DataAccessException e) {
+                attempt++;
+                if (attempt >= maxRetries) {
+                    throw new RuntimeException("Failed to write log after " + maxRetries + " attempts", e);
+                }
+                try {
+                    Thread.sleep(retryDelayMs);
+                    retryDelayMs *= 2;
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Retry interrupted while saving log", ie);
+                }
+            }
+        }
+
+        throw new RuntimeException("Unexpected error during log save retry");
     }
 
-    // Basic log queries
     public Page<LogEntry> getAllLogs(Pageable pageable) {
         return logEntryRepository.findAll(pageable);
     }
@@ -71,46 +95,16 @@ public class LogService {
         } else if (keyword != null) {
             return logEntryRepository.findByMessageContainingIgnoreCase(keyword, pageable);
         }
-        return logEntryRepository.findAll(pageable);
-    }
-
-    public List<LogEntry> getLogsSortedByTimestamp() {
-        return logEntryRepository.findAll(Sort.by(Sort.Direction.ASC, "timestamp"));
+    
+        return Page.empty(pageable); // ← Make sure this is outside the if-else block
     }
 
     public List<LogEntry> simulateOutOfOrderLogs() {
-        List<LogEntry> logs = new ArrayList<>();
-
-        LogEntry oldLog = new LogEntry(0, "Old log", LogLevel.INFO);
-        oldLog.setTimestamp(Instant.now().minusSeconds(300));
-        logs.add(logEntryRepository.save(oldLog));
-
-        LogEntry nowLog = new LogEntry(0, "Current log", LogLevel.INFO);
-        nowLog.setTimestamp(Instant.now());
-        logs.add(logEntryRepository.save(nowLog));
-
-        LogEntry futureLog = new LogEntry(0, "Future log", LogLevel.INFO);
-        futureLog.setTimestamp(Instant.now().plusSeconds(120));
-        logs.add(logEntryRepository.save(futureLog));
-
-        return logs;
+        // For now just return sorted logs as simulated ones
+        return logEntryRepository.findAll(Sort.by(Sort.Direction.DESC, "timestamp"));
     }
 
     public List<LogEntry> getSortedLogs() {
-        return getLogsSortedByTimestamp();
-    }
-
-    // 🔄 Log Recovery: Return logs that the rejoining node missed
-    public List<LogEntry> recoverLogsForRejoiningNode(int lastAppliedIndex) {
-        List<LogEntry> allLogs = logEntryRepository.findAll(Sort.by(Sort.Direction.ASC, "index"));
-        List<LogEntry> missingLogs = new ArrayList<>();
-
-        for (LogEntry log : allLogs) {
-            if (log.getIndex() > lastAppliedIndex) {
-                missingLogs.add(log);
-            }
-        }
-
-        return missingLogs;
+        return logEntryRepository.findAll(Sort.by(Sort.Direction.ASC, "timestamp"));
     }
 }

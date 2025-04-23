@@ -109,7 +109,7 @@ public class LogController {
         }
     }
 
-        @RequestMapping("/counter")
+    @RequestMapping("/counter")
     public class CounterController {
 
         private final CounterService counterService;
@@ -125,4 +125,19 @@ public class LogController {
             return ResponseEntity.ok(nextSequence);
         }
     }
+
+    @PostMapping("/recovery")
+    public ResponseEntity<?> recoverLogs(@RequestBody String log) { 
+    try {
+        // Parse and save the recovered log
+        String[] parts = log.split("\\|");
+        String message = parts[0];
+        LogLevel level = LogLevel.valueOf(parts[1].toUpperCase());
+        logService.createLog(message, level); // or directly save it if trusted
+        return ResponseEntity.ok("Log recovered successfully.");
+    } catch (Exception e) {
+        logger.error("Error recovering log", e);
+        return ResponseEntity.badRequest().body("Invalid log format or internal error.");
+    }
+}
 }

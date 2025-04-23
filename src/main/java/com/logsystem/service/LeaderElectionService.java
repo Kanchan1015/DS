@@ -1,6 +1,7 @@
 package com.logsystem.service;
 
 import com.logsystem.model.ClusterNode;
+import com.logsystem.model.LogEntry; // Assuming LogEntry is the model for log entries
 import com.logsystem.model.LogLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -12,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Random;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors; // For list conversion
 
 @Service
 public class LeaderElectionService implements ApplicationListener<ContextRefreshedEvent> {
@@ -23,6 +25,7 @@ public class LeaderElectionService implements ApplicationListener<ContextRefresh
     private volatile String currentLeader;
     private AtomicBoolean isLeader = new AtomicBoolean(false);
     private Random random = new Random();
+    private long lastHeartbeatReceivedTime = 0; // for failure detection
 
     @Autowired
     public LeaderElectionService(NodeRegistryService nodeRegistryService, LogReplicationService logReplicationService) {
@@ -48,12 +51,18 @@ public class LeaderElectionService implements ApplicationListener<ContextRefresh
         System.out.println("New Leader Elected: " + currentLeader);
     }
 
+    // Detect leader failure by checking last heartbeat time
     @Scheduled(fixedRate = 5000)
     public void leaderHeartbeat() {
         if (isLeader.get()) {
             System.out.println(nodeId + " (Leader) is alive...");
+            lastHeartbeatReceivedTime = System.currentTimeMillis();
         } else {
             System.out.println(nodeId + " is waiting for leader...");
+            if (System.currentTimeMillis() - lastHeartbeatReceivedTime > 10000) { // Leader failure detected
+                System.out.println("Leader failed, starting re-election process...");
+                startElection();
+            }
         }
     }
 
@@ -85,11 +94,16 @@ public class LeaderElectionService implements ApplicationListener<ContextRefresh
     // NEW METHOD: Handle Log Recovery for Rejoining Nodes
     public void handleLogRecovery(String rejoiningNodeId) {
         if (isLeader.get()) {
-            List<String> missingLogs = logReplicationService.getMissingLogs(rejoiningNodeId);
+            List<LogEntry> missingLogs = logReplicationService.getMissingLogs(rejoiningNodeId);
+            // Convert List<LogEntry> to List<String> if necessary
+            List<String> logMessages = missingLogs.stream()
+                                                  .map(log -> log.getMessage()) // Assuming LogEntry has getMessage() method
+                                                  .collect(Collectors.toList());
+
             // Send missing logs to the rejoining node
             String followerUrl = "http://" + nodeRegistryService.getNodeById(rejoiningNodeId).getHost()
                                  + ":" + nodeRegistryService.getNodeById(rejoiningNodeId).getPort() + "/api/logs/recovery";
-            for (String log : missingLogs) {
+            for (String log : logMessages) {
                 restTemplate.postForObject(followerUrl, log, String.class);
             }
             System.out.println("Sent missing logs to " + rejoiningNodeId);
