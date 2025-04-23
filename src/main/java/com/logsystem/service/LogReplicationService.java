@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 public class LogReplicationService {
 
     private final LogEntryRepository logEntryRepository;
-
-    // Track the latest log index each node has received
     private final Map<String, Integer> nodeLogIndices = new HashMap<>();
 
     @Autowired
@@ -22,9 +20,7 @@ public class LogReplicationService {
         this.logEntryRepository = logEntryRepository;
     }
 
-    // Save new log entry (used by leader)
     public void appendLog(String message, LogLevel level) {
-        // Automatically assign index as (max index + 1)
         Integer maxIndex = logEntryRepository.findAll().stream()
                 .map(LogEntry::getIndex)
                 .max(Integer::compareTo)
@@ -34,7 +30,6 @@ public class LogReplicationService {
         logEntryRepository.save(logEntry);
     }
 
-    // Save replicated log from another node
     public void replicateLog(LogEntry logEntry) {
         logEntryRepository.save(logEntry);
     }
@@ -42,14 +37,12 @@ public class LogReplicationService {
     // Fetch missing logs for a rejoining node
     public List<LogEntry> getMissingLogs(String rejoiningNodeId) {
         int lastSeenIndex = nodeLogIndices.getOrDefault(rejoiningNodeId, -1);
-
         return logEntryRepository.findAll().stream()
                 .filter(log -> log.getIndex() > lastSeenIndex)
                 .sorted(Comparator.comparingInt(LogEntry::getIndex))
                 .collect(Collectors.toList());
     }
 
-    // Update the last known index for a node after successful replication
     public void updateNodeLogIndex(String nodeId, int lastIndex) {
         nodeLogIndices.put(nodeId, lastIndex);
     }
