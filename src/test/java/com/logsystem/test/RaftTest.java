@@ -2,12 +2,16 @@ package com.logsystem.test;
 
 import com.logsystem.model.LogLevel;
 import com.logsystem.service.LeaderElectionService;
+import com.logsystem.service.LogService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class RaftTest {
+
+    @Autowired
+    private LogService logService;
 
     @Autowired
     private LeaderElectionService leaderElectionService;
@@ -24,7 +28,7 @@ public class RaftTest {
         for (int i = 1; i <= 100; i++) {
             try {
                 String message = "Stress Log #" + i;
-                leaderElectionService.appendLogEntry(message, LogLevel.INFO);
+                logService.createLog(message, LogLevel.INFO); // <-- fixed this line
                 System.out.println("Appended: " + message);
                 Thread.sleep(50); // slight delay to simulate realistic load
             } catch (Exception e) {

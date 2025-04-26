@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.logsystem.test.RaftTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.271 s -- in com.logsystem.test.RaftTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.330 s -- in com.logsystem.test.RaftTest

@@ -3,15 +3,12 @@ package com.logsystem.service;
 import com.logsystem.model.LogEntry;
 import com.logsystem.model.LogLevel;
 import com.logsystem.repository.LogEntryRepository;
-
 import com.logsystem.service.CounterService;
 import com.logsystem.service.LeaderElectionService;
 import com.logsystem.service.TimeSyncService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.*;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -96,11 +93,10 @@ public class LogService {
             return logEntryRepository.findByMessageContainingIgnoreCase(keyword, pageable);
         }
     
-        return Page.empty(pageable); // ← Make sure this is outside the if-else block
+        return Page.empty(pageable);
     }
 
     public List<LogEntry> simulateOutOfOrderLogs() {
-        // For now just return sorted logs as simulated ones
         return logEntryRepository.findAll(Sort.by(Sort.Direction.DESC, "timestamp"));
     }
 

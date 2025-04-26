@@ -1,5 +1,6 @@
 com/logsystem/service/LeaderElectionService.class
 com/logsystem/service/LogService.class
+com/logsystem/raft/VoteRequest.class
 com/logsystem/controller/LogController.class
 com/logsystem/model/Counter.class
 com/logsystem/model/LogEntry.class
@@ -11,6 +12,7 @@ com/logsystem/controller/LeaderController.class
 com/logsystem/service/LogReplicationService.class
 com/logsystem/LogSystemApplication.class
 com/logsystem/model/ClusterNode.class
+com/logsystem/raft/NodeRole.class
 com/logsystem/service/TimeSyncService.class
 com/logsystem/controller/LogController$CounterController.class
 com/logsystem/controller/TestDataController.class
