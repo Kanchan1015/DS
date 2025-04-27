@@ -1,3 +1,4 @@
+com/logsystem/service/LeaderElectionService$1.class
 com/logsystem/service/LeaderElectionService.class
 com/logsystem/service/LogService.class
 com/logsystem/raft/VoteRequest.class
