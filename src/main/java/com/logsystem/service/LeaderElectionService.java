@@ -1,104 +1,280 @@
 package com.logsystem.service;
 
-import org.springframework.stereotype.Service;
+import com.logsystem.model.ClusterNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import java.util.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class LeaderElectionService {
 
-    private static final int ELECTION_TIMEOUT = 15000;  // Timeout duration in milliseconds
-    private String currentLeader;
-    private final List<String> nodes;  // List of nodes in the cluster
-    private String nodeId;  // Unique node identifier (can be based on host or a random ID)
-    private Timer electionTimer;  // Timer for election timeout
+    @Value("${node.id}")
+    private String nodeId;
 
-    // Constructor
-    public LeaderElectionService(List<String> nodes, @Value("${node.id}") String nodeId) {
-        this.nodes = nodes;
-        this.nodeId = nodeId;
-        this.currentLeader = null;
-        System.out.println("LeaderElectionService initialized for node: " + nodeId);
+    @Value("${server.port}")
+    private int port;
+
+    @Value("${nodes.list}")
+    private List<String> nodeAddresses;
+
+    private final NodeRegistryService nodeRegistryService;
+    private final RestTemplate restTemplate;
+    private volatile String currentLeader = null;
+    private volatile boolean isLeader = false;
+    private volatile NodeStatus status = NodeStatus.FOLLOWER;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private long lastHeartbeat = System.currentTimeMillis();
+    private final AtomicLong currentTerm = new AtomicLong(0);
+    private final AtomicInteger votesReceived = new AtomicInteger(0);
+    private final Random random = new Random();
+    private long electionTimeout;
+
+    private static final long HEARTBEAT_INTERVAL = 1000; // 1 second
+    private static final long MIN_ELECTION_TIMEOUT = 5000; // 5 seconds
+    private static final long MAX_ELECTION_TIMEOUT = 10000; // 10 seconds
+
+    public enum NodeStatus {
+        LEADER,
+        FOLLOWER,
+        CANDIDATE
     }
 
-    // Initiates the leader election process
-    public void startElection() {
-        System.out.println("Node " + nodeId + " is starting an election...");
+    @Autowired
+    public LeaderElectionService(NodeRegistryService nodeRegistryService) {
+        this.nodeRegistryService = nodeRegistryService;
+        this.restTemplate = new RestTemplate();
+    }
 
-        // Simulate the vote request process for a leader election
-        Map<String, Integer> votes = new HashMap<>();
-        votes.put(nodeId, 1);  // Vote for itself
+    @PostConstruct
+    public void init() {
+        System.out.println("Initializing LeaderElectionService for node: " + nodeId + " on port: " + port);
+        resetElectionTimeout();
+        startHeartbeatChecker();
+        // Start election immediately after initialization
+        startElection();
+    }
+
+    private void resetElectionTimeout() {
+        electionTimeout = MIN_ELECTION_TIMEOUT + random.nextInt((int)(MAX_ELECTION_TIMEOUT - MIN_ELECTION_TIMEOUT));
+        System.out.println(nodeId + " reset election timeout to " + electionTimeout + "ms");
+    }
+
+    public synchronized void startElection() {
+        if (status == NodeStatus.LEADER) {
+            System.out.println(nodeId + " is already leader, skipping election");
+            return;
+        }
+
+        System.out.println(nodeId + " starting election process...");
+        currentTerm.incrementAndGet();
+        status = NodeStatus.CANDIDATE;
+        votesReceived.set(1); // Vote for self
+        isLeader = false;
+        currentLeader = null;
         
-        // Request votes from other nodes
-        for (String node : nodes) {
-            if (!node.equals(nodeId)) {
-                boolean vote = requestVote(node);
-                if (vote) {
-                    votes.put(node, votes.getOrDefault(node, 0) + 1);
+        // Update local node status
+        nodeRegistryService.updateNodeStatus(nodeId, false, "CANDIDATE");
+        
+        System.out.println(nodeId + " became candidate for term " + currentTerm.get());
+        
+        // Request votes from all other nodes
+        for (String nodeAddress : nodeAddresses) {
+            if (!nodeAddress.equals("localhost:" + port)) {
+                requestVote(nodeAddress);
+            }
+        }
+        
+        resetElectionTimeout();
+    }
+
+    private void requestVote(String nodeAddress) {
+        try {
+            String urlStr = String.format("http://%s/api/vote?candidateId=%s&term=%d", 
+                nodeAddress, nodeId, currentTerm.get());
+            
+            System.out.println(nodeId + " requesting vote from " + nodeAddress);
+            Boolean voteGranted = restTemplate.postForObject(urlStr, null, Boolean.class);
+            
+            if (voteGranted != null && voteGranted) {
+                int votes = votesReceived.incrementAndGet();
+                System.out.println(nodeId + " received vote from " + nodeAddress + ", total votes: " + votes);
+                
+                if (votes > nodeAddresses.size() / 2 && status == NodeStatus.CANDIDATE) {
+                    System.out.println(nodeId + " received majority of votes, becoming leader");
+                    becomeLeader();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(nodeId + " failed to request vote from " + nodeAddress + ": " + e.getMessage());
+        }
+    }
+
+    public synchronized void becomeLeader() {
+        if (status != NodeStatus.CANDIDATE || votesReceived.get() <= nodeAddresses.size() / 2) {
+            System.out.println(nodeId + " cannot become leader: status=" + status + ", votes=" + votesReceived.get());
+            return;
+        }
+        
+        System.out.println(nodeId + " transitioning to leader state");
+        isLeader = true;
+        status = NodeStatus.LEADER;
+        currentLeader = nodeId;
+        
+        // Update local node status
+        nodeRegistryService.updateNodeStatus(nodeId, true, "LEADER");
+        
+        System.out.println(nodeId + " became the leader for term " + currentTerm.get() + "!");
+        
+        // Broadcast leadership change to all nodes
+        broadcastNewLeader();
+    }
+
+    private void broadcastNewLeader() {
+        System.out.println(nodeId + " broadcasting leadership change to all nodes");
+        ClusterNode leaderNode = nodeRegistryService.getNode(nodeId);
+        leaderNode.setLeader(true);
+        leaderNode.setStatus("LEADER");
+        
+        for (String nodeAddress : nodeAddresses) {
+            if (!nodeAddress.equals("localhost:" + port)) {
+                try {
+                    // First send heartbeat
+                    String heartbeatUrl = String.format("http://%s/api/leader/heartbeat?leaderId=%s&term=%d", 
+                        nodeAddress, nodeId, currentTerm.get());
+                    restTemplate.postForObject(heartbeatUrl, null, Void.class);
+                    
+                    // Then update node status
+                    String updateUrl = String.format("http://%s/api/nodes/update", nodeAddress);
+                    restTemplate.postForObject(updateUrl, leaderNode, Void.class);
+                    
+                    System.out.println(nodeId + " successfully sent leader update to " + nodeAddress);
+                } catch (Exception e) {
+                    System.out.println(nodeId + " failed to send leader update to " + nodeAddress + ": " + e.getMessage());
                 }
             }
         }
+    }
 
-        // Find the node with the highest votes
-        String electedLeader = null;
-        int maxVotes = 0;
-        for (Map.Entry<String, Integer> entry : votes.entrySet()) {
-            if (entry.getValue() > maxVotes) {
-                maxVotes = entry.getValue();
-                electedLeader = entry.getKey();
-            }
+    public synchronized void handleLeaderHeartbeat(String leaderId, long term) {
+        System.out.println(nodeId + " received heartbeat from " + leaderId + " with term " + term);
+        
+        if (term > currentTerm.get()) {
+            System.out.println(nodeId + " received higher term " + term + ", updating term and becoming follower");
+            currentTerm.set(term);
+            status = NodeStatus.FOLLOWER;
+            isLeader = false;
+            currentLeader = null;
+            
+            // Update local node status
+            nodeRegistryService.updateNodeStatus(nodeId, false, "FOLLOWER");
         }
-
-        // Check if the node has received a majority of votes
-        if (electedLeader != null && maxVotes > (nodes.size() / 2)) {
-            currentLeader = electedLeader;
-            System.out.println("Node " + currentLeader + " has been elected as the leader!");
-        } else {
-            System.out.println("Election failed. Not enough votes.");
+        
+        lastHeartbeat = System.currentTimeMillis();
+        
+        if (currentLeader == null || !currentLeader.equals(leaderId)) {
+            System.out.println(nodeId + " updating leader to " + leaderId);
+            currentLeader = leaderId;
+            isLeader = nodeId.equals(leaderId);
+            status = isLeader ? NodeStatus.LEADER : NodeStatus.FOLLOWER;
+            
+            // Update node status in registry
+            nodeRegistryService.updateNodeStatus(nodeId, isLeader, status.toString());
+            
+            System.out.println(nodeId + " updated leader to: " + leaderId + " for term " + term);
         }
     }
 
-    private boolean requestVote(String node) {
-        System.out.println("Node " + nodeId + " requesting vote from " + node);
-        return true;  // Simulated vote granting
+    private void startHeartbeatChecker() {
+        scheduler.scheduleAtFixedRate(() -> {
+            long now = System.currentTimeMillis();
+            
+            if (isLeader) {
+                sendHeartbeats();
+            } else if (now - lastHeartbeat > electionTimeout) {
+                System.out.println(nodeId + " detected leader failure. Starting election...");
+                startElection();
+            }
+        }, 0, HEARTBEAT_INTERVAL, TimeUnit.MILLISECONDS);
+    }
+
+    private void sendHeartbeats() {
+        ClusterNode leaderNode = nodeRegistryService.getNode(nodeId);
+        leaderNode.setLeader(true);
+        leaderNode.setStatus("LEADER");
+        
+        for (String nodeAddress : nodeAddresses) {
+            if (!nodeAddress.equals("localhost:" + port)) {
+                try {
+                    // Send heartbeat
+                    String heartbeatUrl = String.format("http://%s/api/leader/heartbeat?leaderId=%s&term=%d", 
+                        nodeAddress, nodeId, currentTerm.get());
+                    restTemplate.postForObject(heartbeatUrl, null, Void.class);
+                    
+                    // Update node status
+                    String updateUrl = String.format("http://%s/api/nodes/update", nodeAddress);
+                    restTemplate.postForObject(updateUrl, leaderNode, Void.class);
+                } catch (Exception e) {
+                    System.out.println(nodeId + " failed to send heartbeat to " + nodeAddress + ": " + e.getMessage());
+                }
+            }
+        }
+    }
+
+    public synchronized boolean vote(String candidateId, long term) {
+        System.out.println(nodeId + " received vote request from " + candidateId + " for term " + term);
+        
+        if (term < currentTerm.get()) {
+            System.out.println(nodeId + " refusing vote to " + candidateId + " (term " + term + " < " + currentTerm.get() + ")");
+            return false;
+        }
+        
+        if (term > currentTerm.get()) {
+            System.out.println(nodeId + " updating term to " + term + " and becoming follower");
+            currentTerm.set(term);
+            status = NodeStatus.FOLLOWER;
+            isLeader = false;
+            currentLeader = null;
+            
+            // Update local node status
+            nodeRegistryService.updateNodeStatus(nodeId, false, "FOLLOWER");
+        }
+        
+        if (status == NodeStatus.LEADER || (status == NodeStatus.FOLLOWER && currentLeader != null)) {
+            System.out.println(nodeId + " refusing vote to " + candidateId + " (already " + status + ")");
+            return false;
+        }
+        
+        currentLeader = candidateId;
+        System.out.println(nodeId + " voted for " + candidateId + " in term " + term);
+        return true;
+    }
+
+    public boolean isLeader() {
+        return isLeader;
     }
 
     public String getCurrentLeader() {
         return currentLeader;
     }
 
-    public void handleLeaderHeartbeat(String leaderId) {
-        if (currentLeader == null || !currentLeader.equals(leaderId)) {
-            currentLeader = leaderId;
-            System.out.println("Leader changed to: " + leaderId);
-        }
+    public NodeStatus getStatus() {
+        return status;
+    }
+
+    public long getCurrentTerm() {
+        return currentTerm.get();
     }
 
     public String getNodeId() {
         return nodeId;
-    }
-
-    // Check if the current node is the leader
-    public boolean isLeader() {
-        return currentLeader != null && currentLeader.equals(nodeId);
-    }
-
-    public void startElectionTimeout() {
-        electionTimer = new Timer();
-        electionTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (currentLeader == null) {
-                    System.out.println("Leader not found. Starting new election...");
-                    startElection();
-                }
-            }
-        }, ELECTION_TIMEOUT);
-    }
-
-    public void cancelElectionTimeout() {
-        if (electionTimer != null) {
-            electionTimer.cancel();
-        }
     }
 }

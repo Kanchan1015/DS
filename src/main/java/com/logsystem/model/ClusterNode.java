@@ -1,54 +1,79 @@
 package com.logsystem.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class ClusterNode {
+public class ClusterNode implements Serializable {
 
-    private final String nodeId;
-    private final String address;
-    private final int port;
-    private boolean isLeader;
+    private String id;
+    private String address;
+    private int port;
+    private boolean leader;
+    private String status;
+    private long lastHeartbeat;
 
-    public ClusterNode(String nodeId, String address, int port) {
-        this.nodeId = nodeId;
-        this.address = address;
-        this.port = port;
-        this.isLeader = false;  // Default to non-leader
+    public ClusterNode() {
+        this.lastHeartbeat = System.currentTimeMillis();
     }
 
-    public String getNodeId() {
-        return nodeId;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAddress() {
         return address;
     }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public int getPort() {
         return port;
     }
 
+    public void setPort(int port) {
+        this.port = port;
+    }
+
     public boolean isLeader() {
-        return isLeader;
+        return leader;
     }
 
-    public void setLeader(boolean isLeader) {
-        this.isLeader = isLeader;
+    public void setLeader(boolean leader) {
+        this.leader = leader;
     }
 
-    // New getHost() method
-    public String getHost() {
-        return address.split(":")[0];  // Extracts 'localhost' from 'localhost:8080'
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public long getLastHeartbeat() {
+        return lastHeartbeat;
+    }
+
+    public void setLastHeartbeat(long lastHeartbeat) {
+        this.lastHeartbeat = lastHeartbeat;
     }
 
     @Override
     public String toString() {
         return "ClusterNode{" +
-               "nodeId='" + nodeId + '\'' +
-               ", address='" + address + '\'' +
-               ", port=" + port +
-               ", isLeader=" + isLeader +
-               '}';
+                "id='" + id + '\'' +
+                ", address='" + address + '\'' +
+                ", port=" + port +
+                ", leader=" + leader +
+                ", status='" + status + '\'' +
+                ", lastHeartbeat=" + lastHeartbeat +
+                '}';
     }
 
     @Override
@@ -56,11 +81,11 @@ public class ClusterNode {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         ClusterNode that = (ClusterNode) obj;
-        return port == that.port && nodeId.equals(that.nodeId) && address.equals(that.address);
+        return port == that.port && id.equals(that.id) && address.equals(that.address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nodeId, address, port);
+        return Objects.hash(id, address, port);
     }
 }
