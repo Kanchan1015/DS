@@ -10,26 +10,47 @@ import LeaderElection from "./components/LeaderElection";
 import ViewLeader from "./components/ViewLeader";
 import ViewNodes from "./components/ViewNodes";
 
+// ... existing imports ...
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold text-center mb-8">
-        Log System Frontend
-      </h1>
+    <div className="min-h-screen bg-gray-100">
+      {/* Navigation Bar */}
+      <nav className="bg-blue-700 text-white px-6 py-4 mb-8 shadow">
+        <div className="container mx-auto flex justify-between items-center">
+          <span className="text-2xl font-bold">Log System Dashboard</span>
+          <span className="text-sm">Distributed Systems Project</span>
+        </div>
+      </nav>
 
-      {/* Log-related components */}
-      <CreateLog />
-      <ViewLogs />
-      <LogsByLevel />
-      <SimulateLogs />
-      <SortedLogs />
-      <CounterComponent />
-      <RecoverLog />
+      <div className="container mx-auto px-4">
+        {/* Log-related section */}
+        <section className="mb-10">
+          <h2 className="text-xl font-semibold mb-4 text-blue-700">
+            Log Management
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CreateLog />
+            <ViewLogs />
+            <LogsByLevel />
+            <SimulateLogs />
+            <SortedLogs />
+            <CounterComponent />
+            <RecoverLog />
+          </div>
+        </section>
 
-      {/* Cluster and leader election components */}
-      <LeaderElection />
-      <ViewLeader />
-      <ViewNodes />
+        {/* Cluster and leader election section */}
+        <section>
+          <h2 className="text-xl font-semibold mb-4 text-blue-700">
+            Cluster Management
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <LeaderElection />
+            <ViewLeader />
+            <ViewNodes />
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
