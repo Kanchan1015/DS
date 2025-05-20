@@ -1,0 +1,576 @@
+# Created at 2025-05-19T22:09:03.166
+Thread dump for process (35808@Kanchans-Air.bbrouter):
+"main" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@23.0.2/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer.acquire(AbstractQueuedSynchronizer.java:756)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer.tryAcquireSharedNanos(AbstractQueuedSynchronizer.java:1126)
+        at java.base@23.0.2/java.util.concurrent.CountDownLatch.await(CountDownLatch.java:276)
+        at app//com.mongodb.internal.connection.BaseCluster.selectServer(BaseCluster.java:135)
+        at app//com.mongodb.internal.connection.AbstractMultiServerCluster.selectServer(AbstractMultiServerCluster.java:54)
+        at app//com.mongodb.internal.binding.ClusterBinding.getWriteConnectionSource(ClusterBinding.java:134)
+        at app//com.mongodb.client.internal.ClientSessionBinding$$Lambda/0x00000600014d2e50.get(Unknown Source)
+        at app//com.mongodb.client.internal.ClientSessionBinding.getConnectionSource(ClientSessionBinding.java:128)
+        at app//com.mongodb.client.internal.ClientSessionBinding.getWriteConnectionSource(ClientSessionBinding.java:102)
+        at app//com.mongodb.internal.operation.SyncOperationHelper.withConnection(SyncOperationHelper.java:106)
+        at app//com.mongodb.internal.operation.CreateIndexesOperation.execute(CreateIndexesOperation.java:129)
+        at app//com.mongodb.internal.operation.CreateIndexesOperation.execute(CreateIndexesOperation.java:68)
+        at app//com.mongodb.client.internal.MongoClientDelegate$DelegateOperationExecutor.execute(MongoClientDelegate.java:173)
+        at app//com.mongodb.client.internal.MongoCollectionImpl.executeCreateIndexes(MongoCollectionImpl.java:913)
+        at app//com.mongodb.client.internal.MongoCollectionImpl.createIndexes(MongoCollectionImpl.java:896)
+        at app//com.mongodb.client.internal.MongoCollectionImpl.createIndexes(MongoCollectionImpl.java:891)
+        at app//com.mongodb.client.internal.MongoCollectionImpl.createIndex(MongoCollectionImpl.java:876)
+        at app//org.springframework.data.mongodb.core.DefaultIndexOperations.lambda$ensureIndex$0(DefaultIndexOperations.java:129)
+        at app//org.springframework.data.mongodb.core.DefaultIndexOperations$$Lambda/0x00000600014c59a8.doInCollection(Unknown Source)
+        at app//org.springframework.data.mongodb.core.MongoTemplate.execute(MongoTemplate.java:601)
+        at app//org.springframework.data.mongodb.core.DefaultIndexOperations.execute(DefaultIndexOperations.java:215)
+        at app//org.springframework.data.mongodb.core.DefaultIndexOperations.ensureIndex(DefaultIndexOperations.java:119)
+        at app//org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexCreator.createIndex(MongoPersistentEntityIndexCreator.java:153)
+        at app//org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexCreator.checkForAndCreateIndexes(MongoPersistentEntityIndexCreator.java:143)
+        at app//org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexCreator.checkForIndexes(MongoPersistentEntityIndexCreator.java:127)
+        at app//org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexCreator.<init>(MongoPersistentEntityIndexCreator.java:96)
+        at app//org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexCreator.<init>(MongoPersistentEntityIndexCreator.java:73)
+        at app//org.springframework.data.mongodb.core.MongoTemplate.<init>(MongoTemplate.java:263)
+        at app//org.springframework.boot.autoconfigure.data.mongo.MongoDatabaseFactoryDependentConfiguration.mongoTemplate(MongoDatabaseFactoryDependentConfiguration.java:61)
+        at java.base@23.0.2/java.lang.invoke.LambdaForm$DMH/0x00000600012f8c00.invokeVirtual(LambdaForm$DMH)
+        at java.base@23.0.2/java.lang.invoke.LambdaForm$MH/0x00000600014b8800.invoke(LambdaForm$MH)
+        at java.base@23.0.2/java.lang.invoke.LambdaForm$MH/0x00000600011bcc00.invokeExact_MT(LambdaForm$MH)
+        at java.base@23.0.2/jdk.internal.reflect.DirectMethodHandleAccessor.invokeImpl(DirectMethodHandleAccessor.java:155)
+        at java.base@23.0.2/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base@23.0.2/java.lang.reflect.Method.invoke(Method.java:580)
+        at app//org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:140)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:647)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:639)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1335)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1165)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory$$Lambda/0x0000060001280228.getObject(Unknown Source)
+        at app//org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+        at app//org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+        at app//org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1685)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1434)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory$$Lambda/0x0000060001280228.getObject(Unknown Source)
+        at app//org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+        at app//org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+        at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
+        at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:907)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:785)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory$$Lambda/0x0000060001280228.getObject(Unknown Source)
+        at app//org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+        at app//org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+        at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
+        at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:907)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:785)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory$$Lambda/0x0000060001280228.getObject(Unknown Source)
+        at app//org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+        at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
+        at app//org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:959)
+        at app//org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
+        at app//org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+        at app//org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+        at app//org.springframework.boot.SpringApplication.run(SpringApplication.java:334)
+        at app//org.springframework.boot.test.context.SpringBootContextLoader.lambda$loadContext$3(SpringBootContextLoader.java:137)
+        at app//org.springframework.boot.test.context.SpringBootContextLoader$$Lambda/0x00000600011a3648.getWithException(Unknown Source)
+        at app//org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:58)
+        at app//org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:46)
+
+"Reference Handler" 
+   java.lang.Thread.State: RUNNABLE
+        at java.base@23.0.2/java.lang.ref.Reference.waitForReferencePendingList(Native Method)
+        at java.base@23.0.2/java.lang.ref.Reference.processPendingReferences(Reference.java:246)
+        at java.base@23.0.2/java.lang.ref.Reference$ReferenceHandler.run(Reference.java:208)
+
+"Finalizer" 
+   java.lang.Thread.State: WAITING
+        at java.base@23.0.2/java.lang.Object.wait0(Native Method)
+        at java.base@23.0.2/java.lang.Object.wait(Object.java:378)
+        at java.base@23.0.2/java.lang.Object.wait(Object.java:352)
+        at java.base@23.0.2/java.lang.ref.NativeReferenceQueue.await(NativeReferenceQueue.java:48)
+        at java.base@23.0.2/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:166)
+        at java.base@23.0.2/java.lang.ref.NativeReferenceQueue.remove(NativeReferenceQueue.java:89)
+        at java.base@23.0.2/java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:173)
+
+"Signal Dispatcher" 
+   java.lang.Thread.State: RUNNABLE
+
+"Notification Thread" 
+   java.lang.Thread.State: RUNNABLE
+
+"Common-Cleaner" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@23.0.2/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1852)
+        at java.base@23.0.2/java.lang.ref.ReferenceQueue.await(ReferenceQueue.java:79)
+        at java.base@23.0.2/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:151)
+        at java.base@23.0.2/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:229)
+        at java.base@23.0.2/jdk.internal.ref.CleanerImpl.run(CleanerImpl.java:140)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+        at java.base@23.0.2/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:186)
+
+"surefire-forkedjvm-stream-flusher" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@23.0.2/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1763)
+        at java.base@23.0.2/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+        at java.base@23.0.2/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1070)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"surefire-forkedjvm-command-thread" 
+   java.lang.Thread.State: RUNNABLE
+        at java.management@23.0.2/sun.management.ThreadImpl.getThreadInfo1(Native Method)
+        at java.management@23.0.2/sun.management.ThreadImpl.getThreadInfo(ThreadImpl.java:187)
+        at app//org.apache.maven.surefire.booter.ForkedBooter.generateThreadDump(ForkedBooter.java:579)
+        at app//org.apache.maven.surefire.booter.ForkedBooter.access$600(ForkedBooter.java:79)
+        at app//org.apache.maven.surefire.booter.ForkedBooter$4.update(ForkedBooter.java:322)
+        at app//org.apache.maven.surefire.booter.CommandReader$CommandRunnable.callListeners(CommandReader.java:357)
+        at app//org.apache.maven.surefire.booter.CommandReader$CommandRunnable.run(CommandReader.java:309)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"pool-3-thread-1" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@23.0.2/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1763)
+        at java.base@23.0.2/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+        at java.base@23.0.2/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1070)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"BufferPoolPruner-1-thread-1" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@23.0.2/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1763)
+        at java.base@23.0.2/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+        at java.base@23.0.2/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1070)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"cluster-ClusterId{value='682b5e96b2ce546b60735c4f', description='null'}-localhost:27018" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/java.lang.Thread.sleepNanos0(Native Method)
+        at java.base@23.0.2/java.lang.Thread.sleepNanos(Thread.java:496)
+        at java.base@23.0.2/java.lang.Thread.sleep(Thread.java:527)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.waitForNext(DefaultServerMonitor.java:290)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.run(DefaultServerMonitor.java:178)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"cluster-rtt-ClusterId{value='682b5e96b2ce546b60735c4f', description='null'}-localhost:27018" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/java.lang.Thread.sleepNanos0(Native Method)
+        at java.base@23.0.2/java.lang.Thread.sleepNanos(Thread.java:496)
+        at java.base@23.0.2/java.lang.Thread.sleep(Thread.java:527)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor.waitForNext(DefaultServerMonitor.java:442)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor.access$1500(DefaultServerMonitor.java:68)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$RoundTripTimeRunnable.run(DefaultServerMonitor.java:413)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"cluster-ClusterId{value='682b5e96b2ce546b60735c4f', description='null'}-localhost:27019" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/java.lang.Thread.sleepNanos0(Native Method)
+        at java.base@23.0.2/java.lang.Thread.sleepNanos(Thread.java:496)
+        at java.base@23.0.2/java.lang.Thread.sleep(Thread.java:527)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.waitForNext(DefaultServerMonitor.java:290)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.run(DefaultServerMonitor.java:178)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"cluster-rtt-ClusterId{value='682b5e96b2ce546b60735c4f', description='null'}-localhost:27019" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/java.lang.Thread.sleepNanos0(Native Method)
+        at java.base@23.0.2/java.lang.Thread.sleepNanos(Thread.java:496)
+        at java.base@23.0.2/java.lang.Thread.sleep(Thread.java:527)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor.waitForNext(DefaultServerMonitor.java:442)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor.access$1500(DefaultServerMonitor.java:68)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$RoundTripTimeRunnable.run(DefaultServerMonitor.java:413)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"cluster-ClusterId{value='682b5e96b2ce546b60735c4f', description='null'}-localhost:27020" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/java.lang.Thread.sleepNanos0(Native Method)
+        at java.base@23.0.2/java.lang.Thread.sleepNanos(Thread.java:496)
+        at java.base@23.0.2/java.lang.Thread.sleep(Thread.java:527)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.waitForNext(DefaultServerMonitor.java:290)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.run(DefaultServerMonitor.java:178)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"cluster-rtt-ClusterId{value='682b5e96b2ce546b60735c4f', description='null'}-localhost:27020" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/java.lang.Thread.sleepNanos0(Native Method)
+        at java.base@23.0.2/java.lang.Thread.sleepNanos(Thread.java:496)
+        at java.base@23.0.2/java.lang.Thread.sleep(Thread.java:527)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor.waitForNext(DefaultServerMonitor.java:442)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor.access$1500(DefaultServerMonitor.java:68)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$RoundTripTimeRunnable.run(DefaultServerMonitor.java:413)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"SIGINT handler" 
+   java.lang.Thread.State: WAITING
+        at java.base@23.0.2/java.lang.Object.wait0(Native Method)
+        at java.base@23.0.2/java.lang.Object.wait(Object.java:378)
+        at java.base@23.0.2/java.lang.Thread.join(Thread.java:2017)
+        at java.base@23.0.2/java.lang.Thread.join(Thread.java:2093)
+        at java.base@23.0.2/java.lang.ApplicationShutdownHooks.runHooks(ApplicationShutdownHooks.java:114)
+        at java.base@23.0.2/java.lang.ApplicationShutdownHooks$1.run(ApplicationShutdownHooks.java:47)
+        at java.base@23.0.2/java.lang.Shutdown.runHooks(Shutdown.java:130)
+        at java.base@23.0.2/java.lang.Shutdown.exit(Shutdown.java:167)
+        at java.base@23.0.2/java.lang.Terminator$1.handle(Terminator.java:51)
+        at java.base@23.0.2/jdk.internal.misc.Signal$1.run(Signal.java:218)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"SpringApplicationShutdownHook" 
+   java.lang.Thread.State: WAITING
+        at java.base@23.0.2/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@23.0.2/java.util.concurrent.locks.LockSupport.park(LockSupport.java:221)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer.acquire(AbstractQueuedSynchronizer.java:754)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer.acquire(AbstractQueuedSynchronizer.java:990)
+        at java.base@23.0.2/java.util.concurrent.locks.ReentrantLock$Sync.lock(ReentrantLock.java:154)
+        at java.base@23.0.2/java.util.concurrent.locks.ReentrantLock.lock(ReentrantLock.java:323)
+        at app//org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1086)
+        at app//org.springframework.boot.SpringApplicationShutdownHook.closeAndWait(SpringApplicationShutdownHook.java:145)
+        at app//org.springframework.boot.SpringApplicationShutdownHook$$Lambda/0x00000600014ec5e8.accept(Unknown Source)
+        at java.base@23.0.2/java.lang.Iterable.forEach(Iterable.java:75)
+        at app//org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:114)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+
+
+# Created at 2025-05-19T22:09:03.171
+Exiting self fork JVM. Received SHUTDOWN command from Maven shutdown hook.
+Thread dump before exiting the process (35808@Kanchans-Air.bbrouter):
+"main" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@23.0.2/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer.acquire(AbstractQueuedSynchronizer.java:756)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer.tryAcquireSharedNanos(AbstractQueuedSynchronizer.java:1126)
+        at java.base@23.0.2/java.util.concurrent.CountDownLatch.await(CountDownLatch.java:276)
+        at app//com.mongodb.internal.connection.BaseCluster.selectServer(BaseCluster.java:135)
+        at app//com.mongodb.internal.connection.AbstractMultiServerCluster.selectServer(AbstractMultiServerCluster.java:54)
+        at app//com.mongodb.internal.binding.ClusterBinding.getWriteConnectionSource(ClusterBinding.java:134)
+        at app//com.mongodb.client.internal.ClientSessionBinding$$Lambda/0x00000600014d2e50.get(Unknown Source)
+        at app//com.mongodb.client.internal.ClientSessionBinding.getConnectionSource(ClientSessionBinding.java:128)
+        at app//com.mongodb.client.internal.ClientSessionBinding.getWriteConnectionSource(ClientSessionBinding.java:102)
+        at app//com.mongodb.internal.operation.SyncOperationHelper.withConnection(SyncOperationHelper.java:106)
+        at app//com.mongodb.internal.operation.CreateIndexesOperation.execute(CreateIndexesOperation.java:129)
+        at app//com.mongodb.internal.operation.CreateIndexesOperation.execute(CreateIndexesOperation.java:68)
+        at app//com.mongodb.client.internal.MongoClientDelegate$DelegateOperationExecutor.execute(MongoClientDelegate.java:173)
+        at app//com.mongodb.client.internal.MongoCollectionImpl.executeCreateIndexes(MongoCollectionImpl.java:913)
+        at app//com.mongodb.client.internal.MongoCollectionImpl.createIndexes(MongoCollectionImpl.java:896)
+        at app//com.mongodb.client.internal.MongoCollectionImpl.createIndexes(MongoCollectionImpl.java:891)
+        at app//com.mongodb.client.internal.MongoCollectionImpl.createIndex(MongoCollectionImpl.java:876)
+        at app//org.springframework.data.mongodb.core.DefaultIndexOperations.lambda$ensureIndex$0(DefaultIndexOperations.java:129)
+        at app//org.springframework.data.mongodb.core.DefaultIndexOperations$$Lambda/0x00000600014c59a8.doInCollection(Unknown Source)
+        at app//org.springframework.data.mongodb.core.MongoTemplate.execute(MongoTemplate.java:601)
+        at app//org.springframework.data.mongodb.core.DefaultIndexOperations.execute(DefaultIndexOperations.java:215)
+        at app//org.springframework.data.mongodb.core.DefaultIndexOperations.ensureIndex(DefaultIndexOperations.java:119)
+        at app//org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexCreator.createIndex(MongoPersistentEntityIndexCreator.java:153)
+        at app//org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexCreator.checkForAndCreateIndexes(MongoPersistentEntityIndexCreator.java:143)
+        at app//org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexCreator.checkForIndexes(MongoPersistentEntityIndexCreator.java:127)
+        at app//org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexCreator.<init>(MongoPersistentEntityIndexCreator.java:96)
+        at app//org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexCreator.<init>(MongoPersistentEntityIndexCreator.java:73)
+        at app//org.springframework.data.mongodb.core.MongoTemplate.<init>(MongoTemplate.java:263)
+        at app//org.springframework.boot.autoconfigure.data.mongo.MongoDatabaseFactoryDependentConfiguration.mongoTemplate(MongoDatabaseFactoryDependentConfiguration.java:61)
+        at java.base@23.0.2/java.lang.invoke.LambdaForm$DMH/0x00000600012f8c00.invokeVirtual(LambdaForm$DMH)
+        at java.base@23.0.2/java.lang.invoke.LambdaForm$MH/0x00000600014b8800.invoke(LambdaForm$MH)
+        at java.base@23.0.2/java.lang.invoke.LambdaForm$MH/0x00000600011bcc00.invokeExact_MT(LambdaForm$MH)
+        at java.base@23.0.2/jdk.internal.reflect.DirectMethodHandleAccessor.invokeImpl(DirectMethodHandleAccessor.java:155)
+        at java.base@23.0.2/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base@23.0.2/java.lang.reflect.Method.invoke(Method.java:580)
+        at app//org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:140)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:647)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:639)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1335)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1165)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory$$Lambda/0x0000060001280228.getObject(Unknown Source)
+        at app//org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+        at app//org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+        at app//org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1685)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1434)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory$$Lambda/0x0000060001280228.getObject(Unknown Source)
+        at app//org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+        at app//org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+        at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
+        at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:907)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:785)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory$$Lambda/0x0000060001280228.getObject(Unknown Source)
+        at app//org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+        at app//org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+        at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
+        at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:907)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:785)
+        at app//org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+        at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory$$Lambda/0x0000060001280228.getObject(Unknown Source)
+        at app//org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
+        at app//org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+        at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
+        at app//org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:959)
+        at app//org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
+        at app//org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+        at app//org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+        at app//org.springframework.boot.SpringApplication.run(SpringApplication.java:334)
+        at app//org.springframework.boot.test.context.SpringBootContextLoader.lambda$loadContext$3(SpringBootContextLoader.java:137)
+        at app//org.springframework.boot.test.context.SpringBootContextLoader$$Lambda/0x00000600011a3648.getWithException(Unknown Source)
+        at app//org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:58)
+        at app//org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:46)
+
+"Reference Handler" 
+   java.lang.Thread.State: RUNNABLE
+        at java.base@23.0.2/java.lang.ref.Reference.waitForReferencePendingList(Native Method)
+        at java.base@23.0.2/java.lang.ref.Reference.processPendingReferences(Reference.java:246)
+        at java.base@23.0.2/java.lang.ref.Reference$ReferenceHandler.run(Reference.java:208)
+
+"Finalizer" 
+   java.lang.Thread.State: WAITING
+        at java.base@23.0.2/java.lang.Object.wait0(Native Method)
+        at java.base@23.0.2/java.lang.Object.wait(Object.java:378)
+        at java.base@23.0.2/java.lang.Object.wait(Object.java:352)
+        at java.base@23.0.2/java.lang.ref.NativeReferenceQueue.await(NativeReferenceQueue.java:48)
+        at java.base@23.0.2/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:166)
+        at java.base@23.0.2/java.lang.ref.NativeReferenceQueue.remove(NativeReferenceQueue.java:89)
+        at java.base@23.0.2/java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:173)
+
+"Signal Dispatcher" 
+   java.lang.Thread.State: RUNNABLE
+
+"Notification Thread" 
+   java.lang.Thread.State: RUNNABLE
+
+"Common-Cleaner" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@23.0.2/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1852)
+        at java.base@23.0.2/java.lang.ref.ReferenceQueue.await(ReferenceQueue.java:79)
+        at java.base@23.0.2/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:151)
+        at java.base@23.0.2/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:229)
+        at java.base@23.0.2/jdk.internal.ref.CleanerImpl.run(CleanerImpl.java:140)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+        at java.base@23.0.2/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:186)
+
+"surefire-forkedjvm-stream-flusher" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@23.0.2/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1763)
+        at java.base@23.0.2/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+        at java.base@23.0.2/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1070)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"surefire-forkedjvm-command-thread" 
+   java.lang.Thread.State: RUNNABLE
+        at java.management@23.0.2/sun.management.ThreadImpl.getThreadInfo1(Native Method)
+        at java.management@23.0.2/sun.management.ThreadImpl.getThreadInfo(ThreadImpl.java:187)
+        at app//org.apache.maven.surefire.booter.ForkedBooter.generateThreadDump(ForkedBooter.java:579)
+        at app//org.apache.maven.surefire.booter.ForkedBooter.access$600(ForkedBooter.java:79)
+        at app//org.apache.maven.surefire.booter.ForkedBooter$4.update(ForkedBooter.java:315)
+        at app//org.apache.maven.surefire.booter.CommandReader$CommandRunnable.callListeners(CommandReader.java:357)
+        at app//org.apache.maven.surefire.booter.CommandReader$CommandRunnable.exitByConfiguration(CommandReader.java:367)
+        at app//org.apache.maven.surefire.booter.CommandReader$CommandRunnable.run(CommandReader.java:330)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"pool-3-thread-1" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@23.0.2/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1763)
+        at java.base@23.0.2/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+        at java.base@23.0.2/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1070)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"BufferPoolPruner-1-thread-1" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@23.0.2/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1763)
+        at java.base@23.0.2/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+        at java.base@23.0.2/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1070)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+        at java.base@23.0.2/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"cluster-ClusterId{value='682b5e96b2ce546b60735c4f', description='null'}-localhost:27018" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/java.lang.Thread.sleepNanos0(Native Method)
+        at java.base@23.0.2/java.lang.Thread.sleepNanos(Thread.java:496)
+        at java.base@23.0.2/java.lang.Thread.sleep(Thread.java:527)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.waitForNext(DefaultServerMonitor.java:290)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.run(DefaultServerMonitor.java:178)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"cluster-rtt-ClusterId{value='682b5e96b2ce546b60735c4f', description='null'}-localhost:27018" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/java.lang.Thread.sleepNanos0(Native Method)
+        at java.base@23.0.2/java.lang.Thread.sleepNanos(Thread.java:496)
+        at java.base@23.0.2/java.lang.Thread.sleep(Thread.java:527)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor.waitForNext(DefaultServerMonitor.java:442)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor.access$1500(DefaultServerMonitor.java:68)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$RoundTripTimeRunnable.run(DefaultServerMonitor.java:413)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"cluster-ClusterId{value='682b5e96b2ce546b60735c4f', description='null'}-localhost:27019" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/java.lang.Thread.sleepNanos0(Native Method)
+        at java.base@23.0.2/java.lang.Thread.sleepNanos(Thread.java:496)
+        at java.base@23.0.2/java.lang.Thread.sleep(Thread.java:527)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.waitForNext(DefaultServerMonitor.java:290)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.run(DefaultServerMonitor.java:178)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"cluster-rtt-ClusterId{value='682b5e96b2ce546b60735c4f', description='null'}-localhost:27019" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/java.lang.Thread.sleepNanos0(Native Method)
+        at java.base@23.0.2/java.lang.Thread.sleepNanos(Thread.java:496)
+        at java.base@23.0.2/java.lang.Thread.sleep(Thread.java:527)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor.waitForNext(DefaultServerMonitor.java:442)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor.access$1500(DefaultServerMonitor.java:68)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$RoundTripTimeRunnable.run(DefaultServerMonitor.java:413)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"cluster-ClusterId{value='682b5e96b2ce546b60735c4f', description='null'}-localhost:27020" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/java.lang.Thread.sleepNanos0(Native Method)
+        at java.base@23.0.2/java.lang.Thread.sleepNanos(Thread.java:496)
+        at java.base@23.0.2/java.lang.Thread.sleep(Thread.java:527)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.waitForNext(DefaultServerMonitor.java:290)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.run(DefaultServerMonitor.java:178)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"cluster-rtt-ClusterId{value='682b5e96b2ce546b60735c4f', description='null'}-localhost:27020" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@23.0.2/java.lang.Thread.sleepNanos0(Native Method)
+        at java.base@23.0.2/java.lang.Thread.sleepNanos(Thread.java:496)
+        at java.base@23.0.2/java.lang.Thread.sleep(Thread.java:527)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor.waitForNext(DefaultServerMonitor.java:442)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor.access$1500(DefaultServerMonitor.java:68)
+        at app//com.mongodb.internal.connection.DefaultServerMonitor$RoundTripTimeRunnable.run(DefaultServerMonitor.java:413)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"SIGINT handler" 
+   java.lang.Thread.State: WAITING
+        at java.base@23.0.2/java.lang.Object.wait0(Native Method)
+        at java.base@23.0.2/java.lang.Object.wait(Object.java:378)
+        at java.base@23.0.2/java.lang.Thread.join(Thread.java:2017)
+        at java.base@23.0.2/java.lang.Thread.join(Thread.java:2093)
+        at java.base@23.0.2/java.lang.ApplicationShutdownHooks.runHooks(ApplicationShutdownHooks.java:114)
+        at java.base@23.0.2/java.lang.ApplicationShutdownHooks$1.run(ApplicationShutdownHooks.java:47)
+        at java.base@23.0.2/java.lang.Shutdown.runHooks(Shutdown.java:130)
+        at java.base@23.0.2/java.lang.Shutdown.exit(Shutdown.java:167)
+        at java.base@23.0.2/java.lang.Terminator$1.handle(Terminator.java:51)
+        at java.base@23.0.2/jdk.internal.misc.Signal$1.run(Signal.java:218)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+"SpringApplicationShutdownHook" 
+   java.lang.Thread.State: WAITING
+        at java.base@23.0.2/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@23.0.2/java.util.concurrent.locks.LockSupport.park(LockSupport.java:221)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer.acquire(AbstractQueuedSynchronizer.java:754)
+        at java.base@23.0.2/java.util.concurrent.locks.AbstractQueuedSynchronizer.acquire(AbstractQueuedSynchronizer.java:990)
+        at java.base@23.0.2/java.util.concurrent.locks.ReentrantLock$Sync.lock(ReentrantLock.java:154)
+        at java.base@23.0.2/java.util.concurrent.locks.ReentrantLock.lock(ReentrantLock.java:323)
+        at app//org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1086)
+        at app//org.springframework.boot.SpringApplicationShutdownHook.closeAndWait(SpringApplicationShutdownHook.java:145)
+        at app//org.springframework.boot.SpringApplicationShutdownHook$$Lambda/0x00000600014ec5e8.accept(Unknown Source)
+        at java.base@23.0.2/java.lang.Iterable.forEach(Iterable.java:75)
+        at app//org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:114)
+        at java.base@23.0.2/java.lang.Thread.runWith(Thread.java:1588)
+        at java.base@23.0.2/java.lang.Thread.run(Thread.java:1575)
+
+
+

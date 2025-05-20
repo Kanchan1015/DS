@@ -43,14 +43,24 @@ public class LeaderController {
         return ResponseEntity.ok(response);
     }
 
+    // @PostMapping("/leader/heartbeat")
+    // public ResponseEntity<String> receiveHeartbeat(
+    //         @RequestParam String leaderId,
+    //         @RequestParam(defaultValue = "0") long term) {
+    //     System.out.println("Received heartbeat from " + leaderId + " with term " + term);
+    //     leaderElectionService.handleLeaderHeartbeat(leaderId, term);
+    //     return ResponseEntity.ok(String.format("Heartbeat received for leader: %s (Term: %d)", leaderId, term));
+    // }
     @PostMapping("/leader/heartbeat")
-    public ResponseEntity<String> receiveHeartbeat(
+    public ResponseEntity<Void> receiveHeartbeat(
             @RequestParam String leaderId,
             @RequestParam(defaultValue = "0") long term) {
         System.out.println("Received heartbeat from " + leaderId + " with term " + term);
         leaderElectionService.handleLeaderHeartbeat(leaderId, term);
-        return ResponseEntity.ok(String.format("Heartbeat received for leader: %s (Term: %d)", leaderId, term));
+        return ResponseEntity.ok().build(); 
     }
+    
+
 
     @PostMapping("/vote")
     public ResponseEntity<Boolean> vote(
